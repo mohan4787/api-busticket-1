@@ -1,81 +1,15 @@
-const authRouter = require("express").Router()
-authRouter.post("/register", (req,res, next) => {
-    res.json({
-        data: null,
-        message: "Register data",
-        status: "Sucess",
-        options: null
-    })
-})
-authRouter.get("/activate/:token", (req, res, next) => {
-    let params = req.params;
-    const headers = req.headers;
-    const query = req.query;
-    res.json({
-        data: {
-            params,
-            headers,
-            query
-        },
-         message: "Activation token",
-        status: "Sucess",
-        options: null
-    })
-})
-authRouter.post("/login", (req,res, next) => {
-    res.json({
-        data: null,
-        message: "login ",
-        status: "Sucess",
-        options: null
-    })
-})
-authRouter.post("/forget-password", (req,res, next) => {
-    res.json({
-        data: null,
-        message: "forget password",
-        status: "Sucess",
-        options: null
-    })
-})
-authRouter.get("/forget-password-verify/:token", (req,res, next) => {
-    res.json({
-        data: req.params.token,
-        message: "verify token",
-        status: "Sucess",
-        options: null
-    })
-})
-authRouter.put("/reset-password", (req,res, next) => {
-    res.json({
-        data: null,
-        message: "Reset password",
-        status: "Sucess",
-        options: null
-    })
-})
-authRouter.get("/me", (req,res, next) => {
-    res.json({
-        data: null,
-        message: "me route ",
-        status: "Sucess",
-        options: null
-    })
-})
-authRouter.get("/logout", (req,res, next) => {
-    res.json({
-        data: null,
-        message: "logot router ",
-        status: "Sucess",
-        options: null
-    })
-})
-authRouter.put("/user/:id", (req,res, next) => {
-    res.json({
-        data: req.params.id,
-        message: "user update",
-        status: "Sucess",
-        options: null
-    })
-})
+const authRouter = require("express").Router();
+const AuthController = require("./auth.controller")
+
+const authCtrl = new AuthController()
+
+authRouter.post("/register",authCtrl.registerUser)
+authRouter.get("/activate/:token",authCtrl.activateUser )
+authRouter.post("/login", authCtrl.loginUser)
+authRouter.post("/forget-password",authCtrl.forgetPasswordRequest)
+authRouter.get("/forget-password-verify/:token", authCtrl.forgetPasswordTokenVerify)
+authRouter.put("/reset-password",authCtrl.resetPassword)
+authRouter.get("/me", authCtrl.loggedInUserProfile)
+authRouter.get("/logout",authCtrl.logoutUser)
+authRouter.put("/user/:id",authCtrl.updateUserById)
 module.exports = authRouter
