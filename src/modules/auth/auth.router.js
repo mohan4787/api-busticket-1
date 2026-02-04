@@ -1,9 +1,11 @@
 const authRouter = require("express").Router();
-const AuthController = require("./auth.controller")
+const bodyValidator = require("../../middlewares/request-validate.middleware");
+const AuthController = require("./auth.controller");
+const { RegisterDTO } = require("./auth.validator");
 
 const authCtrl = new AuthController()
 
-authRouter.post("/register",authCtrl.registerUser)
+authRouter.post("/register",bodyValidator(RegisterDTO),authCtrl.registerUser)
 authRouter.get("/activate/:token",authCtrl.activateUser )
 authRouter.post("/login", authCtrl.loginUser)
 authRouter.post("/forget-password",authCtrl.forgetPasswordRequest)
