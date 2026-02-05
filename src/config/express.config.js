@@ -1,5 +1,6 @@
 const express = require("express");
 const router = require("./router.config");
+const { deleteFile } = require("../utilities/helper,js");
 const app = express();
 
 app.use(express.json());
@@ -22,6 +23,14 @@ app.use((err, req, res, next) => {
   const detail = err.detail || null;
   const msg = err.message || "Internal Server Error...";
   const status = err.status || "SERVER_ERROR";
+
+  if(req.file) {
+    deleteFile(req.file.path)
+  }else if(req.files){
+    req.files.forEach((file) => {
+      deleteFile(file.path)
+    })
+  }
 
   res.status(code).json({
     error: detail,
