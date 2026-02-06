@@ -1,16 +1,16 @@
 const multer = require("multer");
 const fs = require("fs");
-const { randomStringGenerator } = require("../utilities/helper,js");
+const { randomStringGenerator } = require("../utilities/helper.js");
 
 const myStorage = multer.diskStorage({
-    destination: (req, file, cd) => {
+    destination: (req, file, cb) => {
         let filePath = "./public/uploads";
         if (!fs.existsSync(filePath)) {
             fs.mkdirSync(filePath, { recursive: true });
         }
-        cd(null, filePath)
+        cb(null, filePath)
     },
-    filename: (req, file, cd) => {
+    filename: (req, file, cb) => {
         let filename =randomStringGenerator(15)+"-"+ file.originalname;
         cb(null, filename);
     },
@@ -19,7 +19,7 @@ const myStorage = multer.diskStorage({
 const uploader = (type = 'image') => {
     const uploaderConfig = {
         fileSize: 3000000,
-        fileFilter: function (req, file, cd) {
+        fileFilter: function (req, file, cb) {
             let allowedExts = ['jpg', 'jpeg', 'png', 'gif','svg','webp','bmp'];
             if(type === "doc"){
                this.fileSize = 50000000;
@@ -30,9 +30,9 @@ const uploader = (type = 'image') => {
             }
             const fileExt = file.originalname.split(".").pop()
             if(allowedExts.includes(fileExt.toLowerCase())){
-                cd(null, true);
+                cb(null, true);
             }else{
-                cd({code: 422, message: "Unsupported file type", status: "INVALID_FILE_TYPE"});
+                cb({code: 422, message: "Unsupported file type", status: "INVALID_FILE_TYPE"});
             }
         },
     }

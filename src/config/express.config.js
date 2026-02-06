@@ -1,6 +1,6 @@
 const express = require("express");
 const router = require("./router.config");
-const { deleteFile } = require("../utilities/helper,js");
+const { deleteFile } = require("../utilities/helper.js");
 const app = express();
 
 app.use(express.json());

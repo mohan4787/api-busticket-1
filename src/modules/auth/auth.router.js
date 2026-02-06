@@ -1,6 +1,6 @@
 const authRouter = require("express").Router();
 const bodyValidator = require("../../middlewares/request-validate.middleware");
-const uploader = require("../../middlewares/uploader,middleware");
+const uploader = require("../../middlewares/uploader.middleware");
 const AuthController = require("./auth.controller");
 const { RegisterDTO } = require("./auth.validator");
 
