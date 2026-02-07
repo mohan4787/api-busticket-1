@@ -19,10 +19,12 @@
   "homepage": "https://github.com/mohan4787/api-busticket-1#readme",
   "description": "",
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "cloudinary": "^2.9.0",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "joi": "^18.0.2",
-    "multer": "^2.0.2"
+    "multer": "^2.0.2",
+    "nodemailer": "^8.0.1"
   }
 }
