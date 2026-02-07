@@ -1,12 +1,26 @@
+const { Status } = require("../../config/constants");
+const cloudinarySvc = require("../../services/cloudinary.service");
+const bcrypt = require("bcryptjs");
+const { randomStringGenerator } = require("../../utilities/helper");
 class AuthController {
-  registerUser = (req, res, next) => {
-    const data = req.body;
-    res.json({
-      data: data,
-      message: "Register data",
-      status: "Sucess",
-      options: null,
-    });
+  registerUser = async (req, res, next) => {
+    try {
+      const data = req.body;
+      data.image = await cloudinarySvc.fileUpload(req.file.path, "/user/");
+      data.password = bcrypt.hashSync(data.password, 12);
+      data.status = Status.INACTIVE;
+      data.activationToken = randomStringGenerator(100);
+      delete data.confirmPassword;
+
+      res.json({
+        data: data,
+        message: "Register success",
+        status: "Success",
+        options: null,
+      });
+    } catch (exception) {
+      next(exception);
+    }
   };
   activateUser = (req, res, next) => {
     let params = req.params;
