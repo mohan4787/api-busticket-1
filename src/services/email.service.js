@@ -14,13 +14,13 @@ class EmailService {
           pass: SMTPConfig.password,
         },
       };
-      if(SMTPConfig.provider === "gmail") {
+      if (SMTPConfig.provider === "gmail") {
         config.service = SMTPConfig.provider;
       }
       this.#transport = nodemailer.createTransport(config);
       console.log("SMTP Server connected...");
     } catch (exception) {
-        console.log(exception);
+      console.log(exception);
       throw {
         message: "SMTP Server connection failed",
         status: "SMTP_CONNECTION_ERROR",
@@ -33,14 +33,14 @@ class EmailService {
     msg,
     cc = null,
     bcc = null,
-    attachments = null,
+    attachements = null,
   }) => {
     try {
       let msgBody = {
         to: to,
         from: SMTPConfig.from,
         subject: sub,
-        html: msg,
+        text: msg,
       };
       if (cc) {
         msgBody["cc"] = cc;
@@ -48,16 +48,16 @@ class EmailService {
       if (bcc) {
         msgBody["bcc"] = bcc;
       }
-      if (attachments) {
-        msgBody["attachments"] = attachments;
+      if (attachements) {
+        msgBody["attachements"] = attachements;
       }
-      let response = await this.#transport.sendMail(msgBody);
-      return response;
+      console.log("Sending email...");
+     let response = await this.#transport.sendMail(msgBody)
+     return response;
     } catch (exception) {
-      console.log(exception);
       throw {
-        message: "Email sending failed",
-        status: "EMAIL_SENDING_ERROR",
+        message: "Email sending failed...",
+        status: "EMAIL_SENDING_FAILED",
       };
     }
   };
