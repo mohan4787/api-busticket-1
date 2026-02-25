@@ -16,7 +16,13 @@ const SMTPConfig = {
   from: process.env.SMTP_FROM,
 };
 
+const DbConfig = {
+  mongoDBUrl: process.env.MONGODB_URL,
+  mongoDBName: process.env.MONGODB_DBNAME,
+}
+
 module.exports = {
   AppConfig,
   SMTPConfig,
+  DbConfig,
 };
