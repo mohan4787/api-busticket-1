@@ -1,5 +1,4 @@
 require("dotenv").config();
-
 const AppConfig = {
   cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME,
   cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
@@ -9,12 +8,13 @@ const AppConfig = {
 
 const SMTPConfig = {
   provider: process.env.SMTP_PROVIDER,
-  host: process.env.SMTP_HOST,
+  host: process.env.STMP_HOST || "smtp.gmail.com",
   user: process.env.SMTP_USER,
-  password: process.env.SMTP_PASSWORD,
+  password:process.env.SMTP_PASSWORD,
   port: process.env.SMTP_PORT,
   from: process.env.SMTP_FROM,
 };
+
 
 const DbConfig = {
   mongoDBUrl: process.env.MONGODB_URL,

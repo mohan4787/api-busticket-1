@@ -20,7 +20,7 @@ class EmailService {
       this.#transport = nodemailer.createTransport(config);
       console.log("SMTP Server connected...");
     } catch (exception) {
-      console.log(exception);
+      // console.log(exception);
       throw {
         message: "SMTP Server connection failed",
         status: "SMTP_CONNECTION_ERROR",
@@ -51,8 +51,9 @@ class EmailService {
       if (attachements) {
         msgBody["attachements"] = attachements;
       }
-      console.log("Sending email...");
-     let response = await this.#transport.sendMail(msgBody)
+      
+     let response = await this.#transport.sendMail(msgBody);
+     
      return response;
     } catch (exception) {
       throw {
