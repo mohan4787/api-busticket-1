@@ -1,53 +1,52 @@
-const { string, required, object } = require("joi");
 const mongoose = require("mongoose");
 const { USER_ROLES, Status, GENDER } = require("../../config/constants");
-const { act } = require("react");
+
 
 const UserSchema = new mongoose.Schema({
   name: {
-    type: string,
+    type: String,
     min: 2,
     max: 50,
     required: true,
   },
   email: {
-    type: string,
+    type: String,
     required: true,
     unique: true,
   },
   password: {
-    type: string,
+    type: String,
     required: true,
   },
   role: {
-    type: string,
-    enum: object.values(USER_ROLES),
+    type: String,
+    enum: Object.values(USER_ROLES),
     default: USER_ROLES.PASSENGER,
   },
   status: {
-    type: string,
-    enum: object.values(Status),
+    type: String,
+    enum: Object.values(Status),
     default: Status.INACTIVE,
   },
   address: {
-    billingAddress: string,
-    shippingAddress: string,
+    billingAddress: String,
+    shippingAddress: String,
   },
   phone: {
-    type: string,
+    type: String,
   },
   gender: {
-    type: string,
-    enum: object.values(GENDER),
+    type: String,
+    enum: Object.values(GENDER),
   },
   dob: Date,
-  activationToken: string,
-  forgetPasswordToken: string,
+  activationToken: String,
+  forgetPasswordToken: String,
   expiryTime: Date,
   image: {
-    publicId: string,
-    secureUrl: string,
-    optimizedUrl: string,
+    publicId: String,
+    secureUrl: String,
+    optimizedUrl: String,
   },
   createdBy: {
     type: mongoose.Types.ObjectId,
@@ -59,6 +58,10 @@ const UserSchema = new mongoose.Schema({
     ref: "User",
     default: null,
   },
+},{
+    autoCreate: true,
+    autoIndex: true,
+    timestamps: true
 });
 
 const UserModel = mongoose.model("User", UserSchema);

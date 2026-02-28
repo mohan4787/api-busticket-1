@@ -1,14 +1,18 @@
 
+const userSvc = require("../user/user.service");
 const authSvc = require("./auth.service");
+
 class AuthController {
   registerUser = async (req, res, next) => {
     try {
-      const data = await authSvc.transformUserCreate(req);
-      await authSvc.sendActivationNotification(data);
+      const data = await  authSvc.transformUserCreate(req);
+      let user = await authSvc.createUser(data);
 
-      res.json({
-        data: data,
-        message: "Register success",
+      await authSvc.sendActivationNotification(user);
+
+        res.json({
+        data: userSvc.getUserPublicProfile(user),
+        message: "User registration successful. Please check your email to activate your account.",
         status: "Success",
         options: null,
       });
@@ -16,21 +20,18 @@ class AuthController {
       next(exception);
     }
   };
-  activateUser = (req, res, next) => {
-    let params = req.params;
-    const headers = req.headers;
-    const query = req.query;
-    res.json({
-      data: {
-        params,
-        headers,
-        query,
-      },
-      message: "Activation token",
-      status: "Sucess",
-      options: null,
-    });
+
+  activateUser = async (req, res, next) => {
+   try {
+    const token = req.params.token
+    const userDetail = await userSvc.getSingleUserByFilter({
+      activationToken: token
+    })
+   } catch (exception) {
+    next(exception);
+   }
   };
+
   loginUser = (req, res, next) => {
     res.json({
       data: null,
