@@ -23,14 +23,7 @@ class AuthService {
     }
   }
 
-  async createUser(data) {
-    try {
-      const user = new UserModel(data)
-      return await user.save()
-    } catch (exception) {
-      throw exception
-    }
-  }
+  
 
   async sendActivationNotification(user) {
     try {
@@ -45,6 +38,42 @@ class AuthService {
          Please do not reply to this email. Contact support if you have any questions.
          Note: Please copy the link incase the button is not working: ${AppConfig.frontendUrl}/activate/${user.activationToken}`,
       });
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
+ 
+  async newUserWelcomeEmail(user) {
+    try {
+      return emailSvc.sendEmail({
+        to:user.email,
+        sub: "Welcom to our platform",
+        msg: 
+      `Dear ${user.name},
+      <html>
+        <body style="font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5;">
+          <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 20px; text-align: center;">
+              <h1 style="color: #ffffff; margin: 0; font-size: 28px;">🚌 Welcome to BusTicket</h1>
+           
+            </div>
+            <div style="padding: 40px 20px; text-align: center;">
+              <h2 style="color: #333333; margin-top: 0;">Account Activated Successfully!</h2>
+              <p style="color: #666666; font-size: 16px; line-height: 1.6;">Your account has been activated and you're ready to start booking bus tickets.</p>
+              <div style="margin: 30px 0;">
+                <a href="${AppConfig.frontendUrl}/login" style="background-color: #667eea; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">Get Started Now</a>
+              </div>
+              <hr style="border: none; border-top: 1px solid #eeeeee; margin: 30px 0;">
+              <p style="color: #999999; font-size: 14px;">Enjoy exclusive bus offers and early access to bookings.</p>
+            </div>
+            <div style="background-color: #f9f9f9; padding: 20px; text-align: center; font-size: 12px; color: #999999;">
+              <p style="margin: 0;">Please do not reply to this email. Contact support if you have any questions.<br>© 2024 BusTicket. All rights reserved.</p>
+            </div>
+          </div>
+        </body>
+      </html>`
+      })
     } catch (exception) {
       throw exception;
     }

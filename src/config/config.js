@@ -4,6 +4,7 @@ const AppConfig = {
   cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
   cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET,
   frontendUrl: process.env.FRONTEND_URL,
+  jwtSecret: process.env.JWT_SECRET
 };
 
 const SMTPConfig = {

@@ -19,6 +19,14 @@ class UserService {
       updatedBy: user.updatedBy,
     };
   }
+  async createUser(data) {
+    try {
+      const user = new UserModel(data)
+      return await user.save()
+    } catch (exception) {
+      throw exception
+    }
+  }
 
   getSingleUserByFilter = async (filter) => {
     try {
@@ -28,6 +36,14 @@ class UserService {
       throw exception;
     }
   };
+  async updateSingleUserByFilter (filter, data) {
+    try {
+        const userData = await UserModel.findOneAndUpdate(filter, {$set: data}, {new:true})
+        return userData;
+    } catch (exception) {
+        throw exception;
+    }
+  }
 }
 
 const userSvc = new UserService();
