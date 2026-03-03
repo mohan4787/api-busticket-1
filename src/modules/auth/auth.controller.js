@@ -1,5 +1,6 @@
 const { AppConfig } = require("../../config/config");
 const { Status } = require("../../config/constants");
+const { randomStringGenerator } = require("../../utilities/helper");
 const userSvc = require("../user/user.service");
 const authSvc = require("./auth.service");
 const bcrypt = require("bcryptjs")
@@ -96,10 +97,22 @@ class AuthController {
       }, AppConfig.jwtSecret, {
         expiresIn: "1d"
       })
+      
+      const maskedAccessToken = randomStringGenerator(150);
+      const maskedRefreshToken = randomStringGenerator(150);
+
+      const authData = {
+        user: userDetail._id,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        maskedAccessToken: maskedAccessToken,
+        maskedRefreshToken: maskedRefreshToken
+      }
+      await authSvc.createAuthData(authData);
       res.json({
         data: {
-          accessToken,
-          refreshToken
+          accessToken: maskedAccessToken,
+          refreshToken: maskedRefreshToken
         },
         message: "Welcome to "+userDetail.role+"Pannel",
         status: "LOGIN_SUCCESS",
@@ -135,19 +148,24 @@ class AuthController {
   };
   loggedInUserProfile = (req, res, next) => {
     res.json({
-      data: null,
+      data: req.loggedInUser,
       message: "me route ",
       status: "Sucess",
       options: null,
     });
   };
-  logoutUser = (req, res, next) => {
+  logoutUser = async (req, res, next) => {
+    try {
+    await authSvc.logoutUser(req.headers["authorization"])
     res.json({
       data: null,
-      message: "logot router ",
-      status: "Sucess",
+      message: "Logged out successfully",
+      status: "LOGOUT_SUCCESS",
       options: null,
-    });
+    })
+   } catch (exception) {
+    next(exception)
+   }
   };
   updateUserById = (req, res, next) => {
     res.json({
