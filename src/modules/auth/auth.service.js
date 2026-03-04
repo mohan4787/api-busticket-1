@@ -6,6 +6,7 @@ const { AppConfig } = require("../../config/config");
 const emailSvc = require("../../services/email.service");
 const UserModel = require("../user/user.model");
 const AuthModel = require("./auth.model");
+const userSvc = require("../user/user.service");
 
 class AuthService {
   async transformUserCreate(req) {
@@ -111,6 +112,74 @@ class AuthService {
       }
       const authDel = await AuthModel.findOneAndDelete({maskedAccessToken: accessToken});
       return authDel
+    } catch (exception) {
+      throw exception
+    }
+  }
+
+   logoutFromAll = async(filter) => {
+    try {
+      const authDel = await AuthModel.deleteMany(filter)
+      return authDel
+    } catch (exception) {
+      throw exception
+    }
+  }
+
+  updateSingleRowByFilter = async(filter, data) => {
+    try {
+      const response = await AuthModel.findOneAndUpdate(filter,{$set: data}, {new: true})
+      return response;
+    } catch (exception) {
+      throw exception
+    }
+  }
+  sendPasswordResetRequestEmail = async(userData) => {
+    try {
+      return await emailSvc.sendEmail({
+        to: userData.email,
+        sub: "Password reset request",
+        msg: `Please click the link below to reset your password <br>
+        <a href="${AppConfig.frontendUrl}/reset-password?token=${userData.forgetPasswordToken}">${AppConfig.frontendUrl}/reset-password?token=${userData.forgetPasswordToken}</a>
+       The link will expire in 3 hour. If you did not request for password reset, please ignore this email.`,
+      })
+    } catch (exception) {
+      throw exception
+    }
+  }
+   verifyPasswordResetToken = async(token) => {
+    try {
+      const userDetail = await userSvc.getSingleUserByFilter({
+        forgetPasswordToken: token
+      });
+      if(!userDetail){
+        throw {
+          code: 422,
+          message: "Token not found, try again resetting password",
+          status: "RESET_TOKEN_NOT_FOUND"
+        }
+      }
+      let tokenExpiry = userDetail.expiryTime.getTime();
+      const nowTime = Date.now();
+      if(tokenExpiry < nowTime) {
+        throw {
+          code: 422,
+          message: "Token has expired, try again resetting password",
+          status: "RESET_TOKEN_EXPIRED"
+        }
+      }
+      return userDetail
+    } catch (exception) {
+      throw exception
+    }
+  }
+  sendPasswordResetSuccessEmail = async(userData) => {
+    try {
+      return await emailSvc.sendEmail({
+        to: userData.email,
+        sub: "Password reset successful",
+        msg: `Your password has been reset successfully. If you did not perform this action, please contact support immediately.`,
+      })
     } catch (exception) {
       throw exception
     }

@@ -27,8 +27,17 @@ const ResetPasswordRequestDTO = Joi.object({
     email:EmailDTO
 })
 
+
+const ResetPasswordDataDTO = Joi.object({
+     password:Joi.string().regex(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_])[A-Za-z\d!@#$%^&*()_]{8,25}$/
+  ).required(),
+    confirmPassword: Joi.string().equal(Joi.ref("password")).required().messages({"any.only":"Password and ConfirmPassword must be same"}),
+})
+
 module.exports = {
     RegisterDTO,
     loginDTO,
+    ResetPasswordDataDTO,
     ResetPasswordRequestDTO
 }
